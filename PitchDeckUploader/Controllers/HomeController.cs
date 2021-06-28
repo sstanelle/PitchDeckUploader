@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
-using Ghostscript.NET.Rasterizer;
+using Docnet.Core;
+using Docnet.Core.Models;
 
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 
 using PitchDeckUploader.Models;
 
@@ -19,7 +20,7 @@ namespace PitchDeckUploader.Controllers
     public class HomeController : Controller
     {
         private IWebHostEnvironment env;
-
+ 
         public HomeController(IWebHostEnvironment _environment)
         {
             env = _environment;
@@ -71,6 +72,7 @@ namespace PitchDeckUploader.Controllers
             }
             string sourceFilePath = Path.Combine(StorageRoot, "images", uploadedFile.FileName);
             System.IO.File.WriteAllBytes(sourceFilePath, pdfData);
+
             PdfToPng(sourceFilePath, "image");
 
             List<string> imageList = new List<string>();
@@ -81,28 +83,34 @@ namespace PitchDeckUploader.Controllers
             return Json(imageList);
         }
 
-        private void PdfToPng(string inputFile, string outputFileName)
+        public void PdfToPng(string sourceFilePath, string destinationFilePath)
         {
-            var xDpi = 300; //set the x DPI
-            var yDpi = 300; //set the y DPI
-
-            using (GhostscriptRasterizer rasterizer = new GhostscriptRasterizer())
+            using (var docReader = DocLib.Instance.GetDocReader(sourceFilePath, new PageDimensions(1080, 1920)))
             {
-                rasterizer.CustomSwitches.Add("-dUseCropBox");
-                rasterizer.CustomSwitches.Add("-c");
-                rasterizer.CustomSwitches.Add("[/CropBox [24 72 559 794] /PAGES pdfmark");
-                rasterizer.CustomSwitches.Add("-f");
-
-                rasterizer.Open(inputFile);
-
-                for (int pageNumber = 1; pageNumber <= rasterizer.PageCount; pageNumber++)
+                for (var i = 0; i < docReader.GetPageCount(); i++)
                 {
-                    string pageFilePath = Path.Combine(StorageRoot, "images", "Page-" + pageNumber.ToString() + ".png");
+                    using (var pageReader = docReader.GetPageReader(i))
+                    {
+                        var rawBytes = pageReader.GetImage();
+                        var width = pageReader.GetPageWidth();
+                        var height = pageReader.GetPageHeight();
 
-                    Image img = rasterizer.GetPage(xDpi, yDpi, pageNumber);
-                    img.Save(pageFilePath, ImageFormat.Png);
+                        using var bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
 
-                    Console.WriteLine(pageFilePath);
+                        // create a BitmapData and Lock all pixels to be written 
+                        BitmapData bmpData = bmp.LockBits(
+                                             new Rectangle(0, 0, bmp.Width, bmp.Height),
+                                             ImageLockMode.WriteOnly, bmp.PixelFormat);
+
+                        // copy the data from the byte array into BitmapData.Scan0
+                        Marshal.Copy(rawBytes, 0, bmpData.Scan0, rawBytes.Length);
+
+                        // unlock the pixels
+                        bmp.UnlockBits(bmpData);
+
+                        string pageFilePath = Path.Combine(StorageRoot, "images", "Page-" + i.ToString() + ".png");
+                        bmp.Save(pageFilePath, ImageFormat.Png);
+                    }
                 }
             }
         }
