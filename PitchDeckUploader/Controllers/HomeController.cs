@@ -58,33 +58,38 @@ namespace PitchDeckUploader.Controllers
         [HttpPost]
         public IActionResult UploadPitchDeck(IFormFile uploadedFile)
         {
-            string documentExtension = Path.GetExtension(uploadedFile.FileName);
-            if (!documentExtension.Equals(".pdf", StringComparison.OrdinalIgnoreCase) &&
-                !documentExtension.Equals(".ppt", StringComparison.OrdinalIgnoreCase))
+            try
             {
-                return Json("Pitch deck must be either a PDF or a PowerPoint.");
-            }
+                string documentExtension = Path.GetExtension(uploadedFile.FileName);
+                if (!documentExtension.Equals(".pdf", StringComparison.OrdinalIgnoreCase))
+                {
+                    return Json("Pitch deck must be a PDF.");
+                }
 
-            byte[] pdfData = new byte[uploadedFile.Length];
-            using (Stream s = uploadedFile.OpenReadStream())
+                byte[] pdfData = new byte[uploadedFile.Length];
+                using (Stream s = uploadedFile.OpenReadStream())
+                {
+                    s.Read(pdfData, 0, (int)uploadedFile.Length);
+                }
+                string sourceFilePath = Path.Combine(StorageRoot, "images", uploadedFile.FileName);
+                System.IO.File.WriteAllBytes(sourceFilePath, pdfData);
+
+                DeletePitchDeck();
+
+                List<string> imageList = PdfToPng(sourceFilePath, "image");
+
+                return Json(imageList);
+            }
+            catch (Exception)
             {
-                s.Read(pdfData, 0, (int) uploadedFile.Length);
+                return null;
             }
-            string sourceFilePath = Path.Combine(StorageRoot, "images", uploadedFile.FileName);
-            System.IO.File.WriteAllBytes(sourceFilePath, pdfData);
-
-            PdfToPng(sourceFilePath, "image");
-
-            List<string> imageList = new List<string>();
-            imageList.Add("banner1.svg");
-            imageList.Add("banner2.svg");
-            imageList.Add("banner3.svg");
-
-            return Json(imageList);
         }
 
-        public void PdfToPng(string sourceFilePath, string destinationFilePath)
+        public List<string> PdfToPng(string sourceFilePath, string destinationFilePath)
         {
+            List<string> imageList = new List<string>();
+
             using (var docReader = DocLib.Instance.GetDocReader(sourceFilePath, new PageDimensions(1080, 1920)))
             {
                 for (var i = 0; i < docReader.GetPageCount(); i++)
@@ -108,9 +113,27 @@ namespace PitchDeckUploader.Controllers
                         // unlock the pixels
                         bmp.UnlockBits(bmpData);
 
-                        string pageFilePath = Path.Combine(StorageRoot, "images", "Page-" + i.ToString() + ".png");
+                        string filename = "Page-" + Guid.NewGuid().ToString("N") + ".png";
+                        imageList.Add(filename);
+                        string pageFilePath = Path.Combine(StorageRoot, "images", filename);
                         bmp.Save(pageFilePath, ImageFormat.Png);
                     }
+                }
+            }
+
+            return imageList;
+        }
+
+        private void DeletePitchDeck()
+        {
+            string path = Path.Combine(StorageRoot, "images");
+            string[] filePaths = Directory.GetFiles(path);
+            foreach (string filePath in filePaths)
+            {
+                if (filePath.Contains("Page"))
+                {
+                    System.IO.File.SetAttributes(filePath, FileAttributes.Normal);
+                    System.IO.File.Delete(filePath);
                 }
             }
         }

@@ -12,6 +12,35 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\images\banner1.svg" />
+    <Content Remove="wwwroot\images\banner2.svg" />
+    <Content Remove="wwwroot\images\banner3.svg" />
+    <Content Remove="wwwroot\images\Page-080df88b3c714b9fb73edece55190267.png" />
+    <Content Remove="wwwroot\images\Page-0d4473b1a9f74364b1254256418ab153.png" />
+    <Content Remove="wwwroot\images\Page-160a908bbfa9470eb58945c1e7e48652.png" />
+    <Content Remove="wwwroot\images\Page-18e7bcd136ed4de384949727ba2a2127.png" />
+    <Content Remove="wwwroot\images\Page-29a63a5fb04342088b6d5b6a76a5dd8b.png" />
+    <Content Remove="wwwroot\images\Page-337bcba4d7be4e6baa3c91c6b9847c36.png" />
+    <Content Remove="wwwroot\images\Page-489b8406f3ac405bb62fd0bb6d90fa22.png" />
+    <Content Remove="wwwroot\images\Page-4eab9c08583d45e180f34a277eaa0426.png" />
+    <Content Remove="wwwroot\images\Page-5625865d7cb94a7082b2ce5bec0ad682.png" />
+    <Content Remove="wwwroot\images\Page-71acb811e1e0432684fe24e7884537ec.png" />
+    <Content Remove="wwwroot\images\Page-769997bc24ca41a3a6429b63fe7e41ed.png" />
+    <Content Remove="wwwroot\images\Page-8bf6506c03534ddfad9e1409a3f5c2fb.png" />
+    <Content Remove="wwwroot\images\Page-9f484accc66b4b9980c562b407ed5fc1.png" />
+    <Content Remove="wwwroot\images\Page-a4c37ab27b3c43b9a3b014de1daec193.png" />
+    <Content Remove="wwwroot\images\Page-a7015de3a174486a91b82c5edb219c05.png" />
+    <Content Remove="wwwroot\images\Page-aa23baceb6de49e4bc3e388522fcb461.png" />
+    <Content Remove="wwwroot\images\Page-ac3f5a8b009e45deb3b324a1e0e4b88e.png" />
+    <Content Remove="wwwroot\images\Page-b5ede8bdc94445e692eb073aeab3b74b.png" />
+    <Content Remove="wwwroot\images\Page-b9d839ca06b64b85a401c40172cb010a.png" />
+    <Content Remove="wwwroot\images\Page-ec12163c1444494d8b3d2b46034ea585.png" />
+    <Content Remove="wwwroot\images\Page-fa358e6c913d4ca8bcd7a7e203777a83.png" />
+    <Content Remove="wwwroot\images\pitch-deck.pdf" />
+    <Content Remove="wwwroot\images\wefunder_deck_2021.pdf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Docnet.Core" Version="2.3.0" />
     <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
   </ItemGroup>

@@ -48,11 +48,13 @@
     <script>
             $('#UploadDialog').submit(function (e) {
                 //$("div#carousel-example-generic").fadeOut();
+                $("div#pitchDeckPanel").fadeOut();
+                $("div#pitchDeckImages").html("");
 
-                @*bootbox.dialog({
+                bootbox.dialog({
                     message: '<h2>Uploading pitch deck</h2><img src="@Url.Content("~/images/ajax-loader.gif")" />',
                     closeButton: false
-                });*@
+                });
 
                 var formData = new FormData(this);
 
@@ -69,7 +71,7 @@
                         var imageList = "<div class=''>";
                         // List the planograms found for the program
                         $.each(data, function (i, item) {
-                            imageList += "<span class='col-md-12'><img src='images/" + item + "'/></span>";
+                            imageList += "<span class='col-md-12'><img src='images/" + item + "' width='1000'/></span><br/><br/>";
                         });
                         imageList += "</div>";
 
@@ -85,10 +87,12 @@
                         //$('.carousel-indicators > li').first().addClass('active');
                         //$('#carousel-example-generic').carousel();
 
-                        bootbox.hideAll();
+                        setTimeout(function () {
+                            bootbox.hideAll();
+                        }, 1000); 
                     })
                     .fail(function (data) {
-                        alert("fail");
+                        bootbox.Alert("An error occurred. Pitch deck could not be uploaded.");
                     });
 
                 e.preventDefault();
