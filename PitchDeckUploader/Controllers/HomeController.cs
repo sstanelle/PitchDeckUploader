@@ -19,6 +19,20 @@ namespace PitchDeckUploader.Controllers
 {
     public class HomeController : Controller
     {
+        public class UploadResult
+        {
+            public int returnCode { get; set; }
+            public string message { get; set; }
+            public List<string> imageList { get; set; }
+
+            public UploadResult(int retCode, string msg, List<string> imgList)
+            {
+                returnCode = retCode;
+                message = msg;
+                imageList = imgList;
+            }
+        }
+
         private IWebHostEnvironment env;
  
         public HomeController(IWebHostEnvironment _environment)
@@ -63,7 +77,7 @@ namespace PitchDeckUploader.Controllers
                 string documentExtension = Path.GetExtension(uploadedFile.FileName);
                 if (!documentExtension.Equals(".pdf", StringComparison.OrdinalIgnoreCase))
                 {
-                    return Json("Pitch deck must be a PDF.");
+                    return Json(new UploadResult(-1, "Pitch deck must be a PDF.", null));
                 }
 
                 byte[] pdfData = new byte[uploadedFile.Length];
@@ -78,7 +92,7 @@ namespace PitchDeckUploader.Controllers
 
                 List<string> imageList = PdfToPng(sourceFilePath, "image");
 
-                return Json(imageList);
+                return Json(new UploadResult(0, "Success", imageList));
             }
             catch (Exception)
             {

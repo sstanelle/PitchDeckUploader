@@ -10,7 +10,7 @@
                 <h2>Pitch Deck Uploader</h2>
                 <br />
                 <h3>Select a Pitch Deck to upload</h3>
-                <input type="file" accept=".pdf,.ppt" id="uploadedFile" name="uploadedFile" />
+                <input type="file" accept=".pdf" id="uploadedFile" name="uploadedFile" />
                 <div id="drop-zone">
                     Drop Pitch Deck file here
                 </div>
@@ -68,28 +68,35 @@
                     contentType: false
                     })
                     .done(function (data) {
-                        var imageList = "<div class=''>";
-                        // List the planograms found for the program
-                        $.each(data, function (i, item) {
-                            imageList += "<span class='col-md-12'><img src='images/" + item + "' width='1000'/></span><br/><br/>";
-                        });
-                        imageList += "</div>";
+                        if (data.returnCode == -1) {
+                            setTimeout(function () {
+                                bootbox.hideAll();
+                                bootbox.alert(data.message);
+                            }, 1000);
+                        } else {
+                            var imageList = "<div class=''>";
+                            // List the planograms found for the program
+                            $.each(data.imageList, function (i, item) {
+                                imageList += "<span class='col-md-12'><img src='images/" + item + "' width='1000'/></span><br/><br/>";
+                            });
+                            imageList += "</div>";
 
-                        $("div#pitchDeckImages").html(imageList);
-                        $("div#pitchDeckPanel").fadeIn();
+                            $("div#pitchDeckImages").html(imageList);
+                            $("div#pitchDeckPanel").fadeIn();
 
-                        //$.each(data, function (i, item) {
-                        //    $('<div class="item"><img src="images/' + item + '" class="img-responsive"></div>').appendTo('.carousel-inner');
-                        //    $('<li data-target="#carousel-example-generic" data-slide-to="' + i + '"></li>').appendTo('.carousel-indicators');
-                        //});
+                            //$.each(data, function (i, item) {
+                            //    $('<div class="item"><img src="images/' + item + '" class="img-responsive"></div>').appendTo('.carousel-inner');
+                            //    $('<li data-target="#carousel-example-generic" data-slide-to="' + i + '"></li>').appendTo('.carousel-indicators');
+                            //});
 
-                        //$('.item').first().addClass('active');
-                        //$('.carousel-indicators > li').first().addClass('active');
-                        //$('#carousel-example-generic').carousel();
+                            //$('.item').first().addClass('active');
+                            //$('.carousel-indicators > li').first().addClass('active');
+                            //$('#carousel-example-generic').carousel();
 
-                        setTimeout(function () {
-                            bootbox.hideAll();
-                        }, 1000); 
+                            setTimeout(function () {
+                                bootbox.hideAll();
+                            }, 1000);
+                        }
                     })
                     .fail(function (data) {
                         bootbox.Alert("An error occurred. Pitch deck could not be uploaded.");
