@@ -33,6 +33,7 @@
     ".NETCoreApp,Version=v5.0": {
       "PitchDeckUploader/1.0.0": {
         "dependencies": {
+          "Aspose.Slides.NET": "21.6.0",
           "Docnet.Core": "2.3.0",
           "System.Drawing.Common": "5.0.2",
           "Microsoft.AspNetCore.Antiforgery": "5.0.0.0",
@@ -285,7 +286,7 @@
           "System.Security.SecureString": "5.0.0.0",
           "System.ServiceModel.Web": "4.0.0.0",
           "System.ServiceProcess": "4.0.0.0",
-          "System.Text.Encoding.CodePages": "5.0.0.0",
+          "System.Text.Encoding.CodePages.Reference": "5.0.0.0",
           "System.Text.Encoding": "5.0.0.0",
           "System.Text.Encoding.Extensions": "5.0.0.0",
           "System.Text.Encodings.Web": "5.0.0.0",
@@ -324,6 +325,21 @@
         },
         "compile": {
           "PitchDeckUploader.dll": {}
+        }
+      },
+      "Aspose.Slides.NET/21.6.0": {
+        "dependencies": {
+          "System.Drawing.Common": "5.0.2",
+          "System.Text.Encoding.CodePages": "4.4.0"
+        },
+        "runtime": {
+          "lib/netstandard2.1/Aspose.Slides.dll": {
+            "assemblyVersion": "21.6.0.0",
+            "fileVersion": "21.6.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.1/Aspose.Slides.dll": {}
         }
       },
       "Docnet.Core/2.3.0": {
@@ -411,6 +427,11 @@
         },
         "compile": {
           "ref/netcoreapp3.0/System.Drawing.Common.dll": {}
+        }
+      },
+      "System.Text.Encoding.CodePages/4.4.0": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "5.0.0"
         }
       },
       "Microsoft.AspNetCore.Antiforgery/5.0.0.0": {
@@ -1913,7 +1934,7 @@
         },
         "compileOnly": true
       },
-      "System.Text.Encoding.CodePages/5.0.0.0": {
+      "System.Text.Encoding.CodePages.Reference/5.0.0.0": {
         "compile": {
           "System.Text.Encoding.CodePages.dll": {}
         },
@@ -2119,6 +2140,13 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Aspose.Slides.NET/21.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-NzB5xod4sPM1Mm8kOtgC8muhhohuQH5YBS/em4J/ptdorTPJtXAQIOfSNAeBsErjHbOypizTGW+yCvBdIBQ0ng==",
+      "path": "aspose.slides.net/21.6.0",
+      "hashPath": "aspose.slides.net.21.6.0.nupkg.sha512"
+    },
     "Docnet.Core/2.3.0": {
       "type": "package",
       "serviceable": true,
@@ -2146,6 +2174,13 @@
       "sha512": "sha512-rvr/M1WPf24ljpvvrVd74+NdjRUJu1bBkspkZcnzSZnmAUQWSvanlQ0k/hVHk+cHufZbZfu7vOh/vYc0q5Uu/A==",
       "path": "system.drawing.common/5.0.2",
       "hashPath": "system.drawing.common.5.0.2.nupkg.sha512"
+    },
+    "System.Text.Encoding.CodePages/4.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6JX7ZdaceBiLKLkYt8zJcp4xTJd1uYyXXEkPw6mnlUIjh1gZPIVKPtRXPmY5kLf6DwZmf5YLwR3QUrRonl7l0A==",
+      "path": "system.text.encoding.codepages/4.4.0",
+      "hashPath": "system.text.encoding.codepages.4.4.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Antiforgery/5.0.0.0": {
       "type": "referenceassembly",
@@ -3397,7 +3432,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "System.Text.Encoding.CodePages/5.0.0.0": {
+    "System.Text.Encoding.CodePages.Reference/5.0.0.0": {
       "type": "referenceassembly",
       "serviceable": false,
       "sha512": ""

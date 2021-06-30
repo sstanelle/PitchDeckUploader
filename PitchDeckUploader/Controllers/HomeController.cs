@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
+using Aspose.Slides;
+
 using Docnet.Core;
 using Docnet.Core.Models;
 
@@ -80,9 +82,11 @@ namespace PitchDeckUploader.Controllers
                 }
 
                 string documentExtension = Path.GetExtension(uploadedFile.FileName);
-                if (!documentExtension.Equals(".pdf", StringComparison.OrdinalIgnoreCase))
+                if (!documentExtension.Equals(".pdf", StringComparison.OrdinalIgnoreCase) &&
+                    !documentExtension.Equals(".ppt", StringComparison.OrdinalIgnoreCase) &&
+                    !documentExtension.Equals(".pptx", StringComparison.OrdinalIgnoreCase))
                 {
-                    return Json(new UploadResult(-1, "Pitch deck must be a PDF.", null));
+                    return Json(new UploadResult(-1, "Pitch deck must be a PDF or PowerPoint.", null));
                 }
 
                 byte[] pdfData = new byte[uploadedFile.Length];
@@ -95,7 +99,11 @@ namespace PitchDeckUploader.Controllers
 
                 DeletePitchDeck();
 
-                List<string> imageList = PdfToPng(sourceFilePath, "image");
+                List<string> imageList = new List<string>();
+                if (documentExtension.Equals(".pdf", StringComparison.OrdinalIgnoreCase))
+                    imageList = PdfToPng(sourceFilePath);
+                else
+                    imageList = PptToPng(sourceFilePath);
 
                 return Json(new UploadResult(0, "Success", imageList));
             }
@@ -105,7 +113,7 @@ namespace PitchDeckUploader.Controllers
             }
         }
 
-        public List<string> PdfToPng(string sourceFilePath, string destinationFilePath)
+        public List<string> PdfToPng(string sourceFilePath)
         {
             List<string> imageList = new List<string>();
 
@@ -137,6 +145,28 @@ namespace PitchDeckUploader.Controllers
                         string pageFilePath = Path.Combine(StorageRoot, "images", filename);
                         bmp.Save(pageFilePath, ImageFormat.Png);
                     }
+                }
+            }
+
+            return imageList;
+        }
+
+        public List<string> PptToPng(string sourceFilePath)
+        {
+            List<string> imageList = new List<string>();
+
+            using (Presentation pres = new Presentation(sourceFilePath))
+            {
+                foreach (ISlide sld in pres.Slides)
+                {
+                    // Create a full scale image
+                    Bitmap bmp = sld.GetThumbnail(1f, 1f);
+
+                    // Save the image to disk in JPEG format
+                    string filename = "Page-" + Guid.NewGuid().ToString("N") + ".png";
+                    imageList.Add(filename);
+                    string pageFilePath = Path.Combine(StorageRoot, "images", filename);
+                    bmp.Save(pageFilePath, ImageFormat.Png);
                 }
             }
 
