@@ -28,7 +28,7 @@ To run on Ubuntu, follow these steps:
 
 6. Open a browser window and navigate to either http://localhost:5000 or https://localhost:5001
 
-7. If you encounter the following error, you need to install the libgdiplus package.
+7. If you encounter the following error while uploading a pitch deck, you need to install the libgdiplus package.
 
    "The type initializer for 'Gdip' threw an exception"
    
