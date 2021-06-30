@@ -15,4 +15,4 @@ To run on Ubuntu, follow these steps:
 4. Execute the application
    ./PitchDeckUploader.exe
 
-5. Open a browser window and navigate to http://localhost:5000
+5. Open a browser window and navigate to either http://localhost:5000 or https://localhost:5001
