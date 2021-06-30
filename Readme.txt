@@ -2,6 +2,9 @@ This simple tool allows a user to upload their pitch deck and display it on a we
 
 The accepted file formats for the pitch deck are either PDF or PowerPoint.
 
+Assumptions:
+- .NET SDK 5.0 is installed
+
 To run on Ubuntu, follow these steps:
 
 1. Download the PitchDeckUploader project from GitHub:
