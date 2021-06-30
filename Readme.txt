@@ -9,10 +9,16 @@ To run on Ubuntu, follow these steps:
       OR
    GitHub CLI: gh repo clone sstanelle/PitchDeckUploader
    
-2. Execute the following command:
+2. Open the Ubuntu machine terminal (CLI)
+
+3. Go to the directory:
+   cd PitchDeckUploader/PitchDeckUploader
+   
+4. Execute the following command:
    dotnet publish -c release -r ubuntu.20.04-x64 --self-contained
 
-3. Open the Ubuntu machine terminal (CLI) and go to the 'publish' directory
+3. Go to the directory:
+   cd bin/release/net5.0/ubuntu.20.04-x64/publish
 
 4. Provide execute permissions:
    chmod 777 ./PitchDeckUploader
@@ -21,3 +27,11 @@ To run on Ubuntu, follow these steps:
    ./PitchDeckUploader
 
 6. Open a browser window and navigate to either http://localhost:5000 or https://localhost:5001
+
+7. If you encounter the following error, you need to install the libgdiplus package.
+
+   "The type initializer for 'Gdip' threw an exception"
+   
+   To install libgdiplus on Ubuntu server, execute the following commands:
+   sudo apt-get update
+   sudo apt-get install libgdiplus
