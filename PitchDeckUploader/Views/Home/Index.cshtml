@@ -99,7 +99,12 @@
                         }
                     })
                     .fail(function (data) {
-                        bootbox.alert("An error occurred. Pitch deck could not be uploaded.");
+                        if (data.returnCode == -1) {
+                            setTimeout(function () {
+                                bootbox.hideAll();
+                                bootbox.alert(data.message);
+                            }, 1000);
+                        }
                     });
 
                 e.preventDefault();

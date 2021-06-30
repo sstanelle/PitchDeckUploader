@@ -74,6 +74,11 @@ namespace PitchDeckUploader.Controllers
         {
             try
             {
+                if (uploadedFile == null)
+                {
+                    return Json(new UploadResult(-1, "Please select a pitch deck to upload", null));
+                }
+
                 string documentExtension = Path.GetExtension(uploadedFile.FileName);
                 if (!documentExtension.Equals(".pdf", StringComparison.OrdinalIgnoreCase))
                 {
@@ -96,7 +101,7 @@ namespace PitchDeckUploader.Controllers
             }
             catch (Exception)
             {
-                return null;
+                return Json(new UploadResult(-1, "An error occurred. Pitch deck could not be uploaded.", null));
             }
         }
 
