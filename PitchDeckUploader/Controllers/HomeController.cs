@@ -107,9 +107,9 @@ namespace PitchDeckUploader.Controllers
 
                 return Json(new UploadResult(0, "Success", imageList));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return Json(new UploadResult(-1, "An error occurred. Pitch deck could not be uploaded.", null));
+                return Json(new UploadResult(-1, "An error occurred. Pitch deck could not be uploaded.<br/><br/>" + e.Message, null));
             }
         }
 
