@@ -7,12 +7,12 @@ Assumptions:
 
 To run on Ubuntu 20, follow these steps:
 
-1. Download the PitchDeckUploader project from GitHub:
+1. Open the Ubuntu machine terminal (CLI)
+
+2. Download the PitchDeckUploader project from GitHub:
    https://github.com/sstanelle/PitchDeckUploader.git
       OR
    GitHub CLI: gh repo clone sstanelle/PitchDeckUploader
-   
-2. Open the Ubuntu machine terminal (CLI)
 
 3. Go to the directory:
    cd PitchDeckUploader/PitchDeckUploader
