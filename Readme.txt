@@ -5,7 +5,7 @@ The accepted file formats for the pitch deck are either PDF or PowerPoint.
 Assumptions:
 - .NET SDK 5.0 is installed
 
-To run on Ubuntu, follow these steps:
+To run on Ubuntu 20, follow these steps:
 
 1. Download the PitchDeckUploader project from GitHub:
    https://github.com/sstanelle/PitchDeckUploader.git
