@@ -35,16 +35,19 @@ namespace PitchDeckUploader.Controllers
             }
         }
 
+        public Deck deck { get; set; }
+
         private IWebHostEnvironment env;
  
         public HomeController(IWebHostEnvironment _environment)
         {
+            deck = null;
             env = _environment;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(deck);
         }
         public IActionResult About()
         {
@@ -99,78 +102,19 @@ namespace PitchDeckUploader.Controllers
 
                 DeletePitchDeck();
 
-                List<string> imageList = new List<string>();
                 if (documentExtension.Equals(".pdf", StringComparison.OrdinalIgnoreCase))
-                    imageList = PdfToPng(sourceFilePath);
+                    deck = new PdfDeck(sourceFilePath, StorageRoot);
                 else
-                    imageList = PptToPng(sourceFilePath);
+                    deck = new PowerPointDeck(sourceFilePath, StorageRoot);
 
-                return Json(new UploadResult(0, "Success", imageList));
+                deck.ExtractImages();
+
+                return Json(new UploadResult(0, "Success", deck.ImageList));
             }
             catch (Exception e)
             {
                 return Json(new UploadResult(-1, "An error occurred. Pitch deck could not be uploaded.<br/><br/>" + e.Message, null));
             }
-        }
-
-        public List<string> PdfToPng(string sourceFilePath)
-        {
-            List<string> imageList = new List<string>();
-
-            using (var docReader = DocLib.Instance.GetDocReader(sourceFilePath, new PageDimensions(1080, 1920)))
-            {
-                for (var i = 0; i < docReader.GetPageCount(); i++)
-                {
-                    using (var pageReader = docReader.GetPageReader(i))
-                    {
-                        var rawBytes = pageReader.GetImage();
-                        var width = pageReader.GetPageWidth();
-                        var height = pageReader.GetPageHeight();
-
-                        using var bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-
-                        // create a BitmapData and Lock all pixels to be written 
-                        BitmapData bmpData = bmp.LockBits(
-                                             new Rectangle(0, 0, bmp.Width, bmp.Height),
-                                             ImageLockMode.WriteOnly, bmp.PixelFormat);
-
-                        // copy the data from the byte array into BitmapData.Scan0
-                        Marshal.Copy(rawBytes, 0, bmpData.Scan0, rawBytes.Length);
-
-                        // unlock the pixels
-                        bmp.UnlockBits(bmpData);
-
-                        string filename = "Page-" + Guid.NewGuid().ToString("N") + ".png";
-                        imageList.Add(filename);
-                        string pageFilePath = Path.Combine(StorageRoot, "images", filename);
-                        bmp.Save(pageFilePath, ImageFormat.Png);
-                    }
-                }
-            }
-
-            return imageList;
-        }
-
-        public List<string> PptToPng(string sourceFilePath)
-        {
-            List<string> imageList = new List<string>();
-
-            using (Presentation pres = new Presentation(sourceFilePath))
-            {
-                foreach (ISlide sld in pres.Slides)
-                {
-                    // Create a full scale image
-                    Bitmap bmp = sld.GetThumbnail(1f, 1f);
-
-                    // Save the image to disk in JPEG format
-                    string filename = "Page-" + Guid.NewGuid().ToString("N") + ".png";
-                    imageList.Add(filename);
-                    string pageFilePath = Path.Combine(StorageRoot, "images", filename);
-                    bmp.Save(pageFilePath, ImageFormat.Png);
-                }
-            }
-
-            return imageList;
         }
 
         private void DeletePitchDeck()
