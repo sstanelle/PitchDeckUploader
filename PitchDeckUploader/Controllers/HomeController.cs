@@ -2,18 +2,10 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
-using Aspose.Slides;
-
-using Docnet.Core;
-using Docnet.Core.Models;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.InteropServices;
 
 using PitchDeckUploader.Models;
 
@@ -35,19 +27,16 @@ namespace PitchDeckUploader.Controllers
             }
         }
 
-        public Deck deck { get; set; }
-
         private IWebHostEnvironment env;
  
         public HomeController(IWebHostEnvironment _environment)
         {
-            deck = null;
             env = _environment;
         }
 
         public IActionResult Index()
         {
-            return View(deck);
+            return View();
         }
         public IActionResult About()
         {
@@ -102,6 +91,7 @@ namespace PitchDeckUploader.Controllers
 
                 DeletePitchDeck();
 
+                Deck deck = null;
                 if (documentExtension.Equals(".pdf", StringComparison.OrdinalIgnoreCase))
                     deck = new PdfDeck(sourceFilePath, StorageRoot);
                 else
